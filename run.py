@@ -1,5 +1,4 @@
 import json
-import logging
 
 import bottle
 from bottle import HTTPError, get, request, response, run, static_file, template
