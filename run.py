@@ -79,16 +79,23 @@ class GetArtistForm(Form):
     )
     value = StringField(validators=[DataRequired()])
 
+#form validators сообщения
+message = {
+    "required": "Пожалуйста введите данные",
+    "required_int": "Пожалуйста введите число",
+    "length": "Количество символов должно быть не меньше одного и не больше 50",
+    "number": "Год должен быть числом в промежутке от 1900 до 2050",
+}
 
 class NewArtistForm(Form):
     """
     wtforms  валидация формы запроса к базе данных 
     """
     # ["year", "artist", "genre", "album"],
-    artist = StringField(validators=[DataRequired(), Length(1, 50)])
-    album = StringField(validators=[DataRequired(), Length(1, 50)])
-    year = IntegerField(validators=[DataRequired(), NumberRange(1900, 2050)])
-    genre = StringField(validators=[DataRequired(), Length(1, 50)])
+    artist = StringField(validators=[DataRequired(message = message["required"]), Length(1, 50, message = message["length"])])
+    album = StringField(validators=[DataRequired(message = message["required"]), Length(1, 50, message = message["length"])])
+    year = IntegerField(validators=[DataRequired(message = message["required_int"]), NumberRange(1900, 2050, message = message["number"])])
+    genre = StringField(validators=[DataRequired(message = message["required"]), Length(1, 50, message = message["length"])])
 
 
 @app.get("/api/artist")
@@ -106,6 +113,7 @@ def artists(db):
             return HTTPError(400, f"Ошибка в запросе")
         if records.all():
             res = [record.as_dict() for record in records]
+            res.append({"Количество альбомов": records.count()})
             return json.dumps(res)
         else:
             return HTTPError(404, f"{form.type.data} {form.value.data} не найден.")
@@ -113,6 +121,7 @@ def artists(db):
         records = db.query(Album).group_by(Album.artist).all()
         if records:
             res = [record.artist for record in records]
+            res.append({"Количество артистов": len(records)})    
             return json.dumps(res)
         else:
             return HTTPError(500, f"База данных пуста")
@@ -159,9 +168,12 @@ def new_artist(db):
             else:
                 content = {"message": "Дубликат записи не добавлен в базу данных"}
                 return template("message.tpl", content)
-        
         else:
-            return HTTPError(400, f"Ошибка в запросе")
+            print(form.errors)
+            content = []
+            for field, message in form.errors.items():
+                content.append(f"В поле {field} ошибка: {' '.join(message)}")
+            return HTTPError(400, "\n".join(content))
     else:
         return HTTPError(400, f"Ошибка сервера")
 

@@ -6,4 +6,5 @@
     <li>{{record.artist}} - {{record.album}} - {{record.year}} - {{record.genre}}</li>
 % end
 </ul>
+<h3>Количество альбомов: {{records.count()}}
 </div>
