@@ -148,7 +148,7 @@ def get_form_new():
 def new_artist(db):
     artist = Album()
     if request.forms:
-        form = NewArtistForm(request.forms.decode())
+        form = NewArtistForm(request.forms.decode())   
         if form.validate():
             form.populate_obj(artist)
             q = db.query(Album).filter(Album.album == artist.album)
