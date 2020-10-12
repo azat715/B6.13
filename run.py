@@ -4,7 +4,6 @@ import logging
 import bottle
 from bottle import HTTPError, get, request, response, run, static_file, template
 from bottle.ext import sqlalchemy
-from loguru import logger
 from sqlalchemy import Column, Integer, Text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from wtforms import Form, SelectField, StringField, IntegerField
