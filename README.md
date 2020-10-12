@@ -11,7 +11,7 @@
 - http://localhost:8081/artist можно зайти через браузер и с помощью формы выполнить запрос к базе
 
 Валидация 
-- http --form POST http://localhost:8081/new_artist artist="" album="" year=l genre="" 
+- http --form POST http://localhost:8081/new_artist artist="" album="" year=1 genre="" 
 - http --form POST http://localhost:8081/new_artist artist="" album="" year=sss genre="" 
 
 
